@@ -1,0 +1,4 @@
+tasks:
+  dev:
+    script: | 
+      cd ../ && docker compose up --build db
