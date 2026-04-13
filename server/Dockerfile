@@ -26,9 +26,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/build ./build
 COPY package.json ./
 
 EXPOSE 3003
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "build/index.js"]
