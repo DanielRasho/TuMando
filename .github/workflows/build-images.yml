@@ -19,7 +19,7 @@ jobs:
             context: ./server
             image: smaugtur/tucontrol-server
           - name: db
-            context: ./db/game
+            context: ./db
             image: smaugtur/tucontrol-db
 
     steps:
