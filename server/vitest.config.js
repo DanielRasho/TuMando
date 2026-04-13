@@ -17,6 +17,7 @@ export default defineConfig({
     testTimeout : 10000,
     hookTimeout : 10000,
   },
+  esbuild : {tsconfigRaw : require("./tsconfig.test.json")},
   printConsoleTrace : true,
   silent : false,
 });

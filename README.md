@@ -1,4 +1,8 @@
 # 🕹️ TuMando 
+![Backend Integration Tests](https://github.com/DanielRasho/TuMando/actions/workflows/run-tests.yml/badge.svg)
+![Image Builds](https://github.com/DanielRasho/TuMando/actions/workflows/build-images.yml/badge.svg)
+
+A little app to control your inventary and payments as a bussiness, with a funny parody name.
 
 ## 📦 Dependencies
 

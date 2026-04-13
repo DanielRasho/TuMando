@@ -14,13 +14,13 @@ jobs:
         service:
           - name: client
             context: ./client
-            image: smaugtur/pokesocket-client
+            image: smaugtur/tucontrol-client
           - name: server
             context: ./server
-            image: smaugtur/pokesocket-server
+            image: smaugtur/tucontrol-server
           - name: db
             context: ./db/game
-            image: smaugtur/pokesocket-db
+            image: smaugtur/tucontrol-db
 
     steps:
       - name: Checkout repository

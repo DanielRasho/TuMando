@@ -1,0 +1,58 @@
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: tumando-client:latest
+    container_name: tumando-client
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - app-network
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: tucontrol-server:latest
+    container_name: tucontrol-server
+    ports:
+      - "3003:8080"
+    restart: unless-stopped
+    networks:
+      - app-network
+    environment:
+      # API
+      API_PORT: "8080"
+      # DB
+      DB_URI: "postgresql://postgres:postgres@tucontrol-db:5433/postgres"
+      # LOGGING Configuration
+      LOGGING_LEVEL: "debug"
+      LOGGING_PRETTY: "yes"
+      # CORS Configuration
+      ALLOWED_ORIGINS: "http://localhost:3001,http://localhost:3000,http://example.com"
+      ALLOWED_CONTENT_TYPES: "application/json,text/plain"
+      ALLOWED_METHODS: "GET,POST,PUT,DELETE,PATCH"
+      ALLOWED_HEADERS: "Content-Type,Authorization"
+  db:
+    build:
+      context: ./db/
+      dockerfile: Dockerfile
+    image: postgres-cron:17
+    container_name: tucontrol-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d  # Auto-run SQL files on first start
+    restart: unless-stopped
+
+networks:
+  app-network:
+
+volumes:
+  postgres_data:
