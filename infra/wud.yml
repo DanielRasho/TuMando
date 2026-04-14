@@ -11,3 +11,9 @@ services:
       - WUD_WATCHER_LOCAL_CRON=0 0 3 * * *  # Daily at 3 AM
       - WUD_TRIGGER_DOCKER_LOCAL_SOCKET=/var/run/docker.sock
       - WUD_TRIGGER_DOCKER_UPDATE_AUTO=false
+    networks:
+      - vpc
+
+networks:
+  vpc:
+    external: true

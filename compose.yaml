@@ -5,11 +5,11 @@ services:
       dockerfile: Dockerfile
     image: tumando-client:latest
     container_name: tumando-client
-    ports:
-      - "8080:80"
     restart: unless-stopped
     networks:
-      - app-network
+      - vpc
+    environment:
+      PORT: "3003"
   server:
     build:
       context: ./server
@@ -17,10 +17,10 @@ services:
     image: tucontrol-server:latest
     container_name: tucontrol-server
     ports:
-      - "3003:8080"
+      - "8080:8080"
     restart: unless-stopped
     networks:
-      - app-network
+      - vpc
     environment:
       # API
       API_PORT: "8080"
@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
 
 networks:
-  app-network:
+  vpc:
 
 volumes:
   postgres_data:

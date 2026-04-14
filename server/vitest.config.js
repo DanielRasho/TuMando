@@ -10,7 +10,7 @@ export default defineConfig({
   },
   test : {
     // Just run the main file, it will be the entry point for all tests.
-    // include: ["./test/main.test.ts"],
+    include: ["./test/main.test.ts"],
     // Display a detailed report of tests
     reporters : [ [ "verbose" ] ],
     // globalSetup: ["./test/globalSetup.ts"],
