@@ -31,4 +31,4 @@ COPY package.json ./
 
 EXPOSE 3003
 
-CMD ["node", "build/index.js"]
+CMD ["node", "build/main.js"]

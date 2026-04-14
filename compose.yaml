@@ -27,6 +27,7 @@ services:
       # DB
       DB_URI: "postgresql://postgres:postgres@tucontrol-db:5433/postgres"
       # LOGGING Configuration
+      LOGGING_METHOD: "STDOUT"
       LOGGING_LEVEL: "debug"
       LOGGING_PRETTY: "yes"
       # CORS Configuration

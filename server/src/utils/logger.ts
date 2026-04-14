@@ -1,5 +1,5 @@
 import type { Bindings, Logger } from "pino";
-import pino from "pino";
+import pino, { destination } from "pino";
 import { loadLoggingConfig } from "../config";
 
 const config = loadLoggingConfig();
@@ -7,9 +7,10 @@ const config = loadLoggingConfig();
 let transport: any;
 
 switch (config.LoggingMethod) {
-    case "CONSOLE":
+    case "STDOUT":
         transport = pino.transport({
             target: "pino/file", // Log to std output
+            options: {destination: 1}
         });
         break;
     case "FILE":
@@ -20,8 +21,10 @@ switch (config.LoggingMethod) {
         break;
     default:
         transport = pino.transport({
-            target: "pino/file",
+            target: "pino/file", // Log to std output
+            options: {destination: 1}
         });
+        break;
 }
 
 const log: Logger = pino(

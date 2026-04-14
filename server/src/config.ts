@@ -3,11 +3,7 @@ export type AppConfig = {
 };
 
 export type DatabaseConfig = {
-    DBHost: string;
-    DBPort: string;
-    DBUser: string;
-    DBPassword: string;
-    DBName: string;
+    DBUri: string;
 };
 
 export type CorsConfig = {
@@ -37,11 +33,7 @@ export function loadAppConfig(): AppConfig {
 
 export function loadDatabaseConfig(): DatabaseConfig {
     return {
-        DBHost: mustGetEnv("DB_HOST"),
-        DBPort: mustGetEnv("DB_PORT"),
-        DBUser: mustGetEnv("DB_USER"),
-        DBPassword: mustGetEnv("DB_USER_PASSWORD"),
-        DBName: mustGetEnv("DB_NAME"),
+        DBUri: mustGetEnv("DB_URI"),
     };
 }
 
@@ -58,15 +50,7 @@ export function loadLoggingConfig(): LoggingConfig {
     return {
         LoggingLevel: mustGetEnv("LOGGING_LEVEL"),
         LoggingMethod: mustGetEnv("LOGGING_METHOD"),
-        LoggingFilePath: mustGetEnv("LOGGING_FILE_PATH"),
-    };
-}
-
-export function loadOAuthConfig(): OAuthConfig {
-    return {
-        OuthKey: mustGetEnv("AUTH_KEY"),
-        OuthTokenExpiry: mustGetEnv("AUTH_TOKEN_EXPIRY"),
-        IDTokenExpiry: mustGetEnv("AUTH_ID_TOKEN_EXPIRY"),
+        LoggingFilePath: process.env["LOGGING_FILE_PATH"], // optional
     };
 }
 
