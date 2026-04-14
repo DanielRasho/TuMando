@@ -9,8 +9,6 @@ A little app to control your inventary and payments as a bussiness, with a funny
 Before you get down to rock some code, you need these programs installed on your PC:
 
 - Docker
-- Go
-- Go Air (hot reload for Go apps)
 - Node
 - PNPM (Node package manager)
 - process-compose
@@ -59,19 +57,19 @@ Each box is a containerized app and arrows represent direct network traffic conn
 
 ## 🔄 CI/CD
 
-You may want to check for actual runs [here](https://github.com/DanielRasho/PokeSocket/actions/runs/21841440383) or [here](https://github.com/DanielRasho/PokeSocket/actions/runs/21841556209)
+You may want to check for actual runs [here]() or [here]()
 
 ### 🧪 Tests
 
 The server has a suite of integration tests that run on every pull request to ensure code quality.
 
-![Backend Integration Tests](https://github.com/DanielRasho/PokeSocket/actions/workflows/run-tests.yml/badge.svg)
+![Backend Integration Tests](https://github.com/DanielRasho/TuMando/actions/workflows/run-tests.yml/badge.svg)
 
 ### 🐳 Builds
 
 Docker images are built via GitHub Actions and pushed to a [Docker registry](https://hub.docker.com/u/smaugtur), which the production environment pulls from.
 
-![Image Builds](https://github.com/DanielRasho/PokeSocket/actions/workflows/build-images.yml/badge.svg)
+![Image Builds](https://github.com/DanielRasho/TuMando/actions/workflows/build-images.yml/badge.svg)
 
 ### 🚀 Deployment Pipeline
 
