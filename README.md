@@ -29,8 +29,8 @@ The following services will be started:
 
 | Service    | Port   | Description                  |
 |------------|--------|------------------------------|
-| `client`   | `8080` | Vue 3 web application        |
-| `server`   | `3003` | Go WebSocket backend         |
+| `client`   | `3003` | Next web application        |
+| `server`   | `3004` | REST API backend         |
 | `postgres` | `5433` | PostgreSQL database          |
 
 
