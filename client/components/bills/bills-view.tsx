@@ -2,28 +2,26 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { Plus } from "lucide-react";
+import { useMemo, useState } from "react";
 
 import { DataTable } from "@/components/ui/table/data-table";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { getBills, Bill } from "@/lib/api";
+import { CreateBillDialog } from "@/components/bills/create-bill-dialog";
+import { BillDetailsDialog } from "@/components/bills/bill-details-dialog";
 
-const billsColumns: ColumnDef<Bill>[] = [
+const createBillsColumns = (onRowClick: (billId: string) => void): ColumnDef<Bill>[] => [
   {
     accessorKey: "id",
     header: "Bill ID",
-    cell: ({ row }) => row.original.id.slice(0, 8) + "...",
+    cell: ({ row }) => (
+      <button
+        onClick={() => onRowClick(row.original.id)}
+        className="font-mono text-sm text-primary hover:underline"
+      >
+        {row.original.id.slice(0, 8)}...
+      </button>
+    ),
   },
   {
     accessorKey: "nit",
@@ -32,6 +30,7 @@ const billsColumns: ColumnDef<Bill>[] = [
   {
     accessorKey: "date",
     header: "Date",
+    cell: ({ row }) => new Date(row.original.date).toLocaleDateString(),
   },
   {
     accessorKey: "shop",
@@ -40,17 +39,23 @@ const billsColumns: ColumnDef<Bill>[] = [
   {
     accessorKey: "total_amount",
     header: "Total Amount",
-    cell: ({ row }) => `$${row.original.total_amount.toFixed(2)}`,
+    cell: ({ row }) => `Q${row.original.total_amount.toFixed(2)}`,
   },
 ];
 
 export function BillsView() {
+  const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
   const billsQuery = useQuery({
     queryKey: ["bills"],
     queryFn: getBills,
   });
 
-  const columns = useMemo(() => billsColumns, []);
+  const columns = useMemo(() => createBillsColumns((billId) => {
+    setSelectedBillId(billId);
+    setDetailsOpen(true);
+  }), []);
 
   return (
     <div className="p-4 sm:p-6">
@@ -59,31 +64,12 @@ export function BillsView() {
           <CardHeader className="gap-3">
             <CardTitle className="text-2xl">Bills</CardTitle>
             <CardDescription className="max-w-3xl text-sm leading-6">
-              View all sales bills, invoice details, and transaction history.
+              View all sales bills, invoice details, and transaction history. Click on a bill to see details.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="flex justify-end">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="size-4" />
-                    Create bill
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Create new bill</DialogTitle>
-                    <DialogDescription>
-                      This modal is ready for the bill creation form. We can wire the fields and zod validation next.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="rounded-xl border border-dashed border-border bg-muted/40 p-6 text-sm text-muted-foreground">
-                    Empty modal placeholder.
-                  </div>
-                  <DialogFooter showCloseButton />
-                </DialogContent>
-              </Dialog>
+              <CreateBillDialog />
             </div>
 
             <DataTable
@@ -96,6 +82,8 @@ export function BillsView() {
           </CardContent>
         </Card>
       </div>
+
+      <BillDetailsDialog billId={selectedBillId} open={detailsOpen} onOpenChange={setDetailsOpen} />
     </div>
   );
 }
