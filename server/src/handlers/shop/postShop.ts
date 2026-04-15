@@ -24,9 +24,11 @@ const postShopHandler = (db: Pool) => async (req: Request, res: Response) => {
         body = await validateBody(req.body, postShopSchema);
     } catch (err) {
         if (err instanceof ValidationError) {
+            log.error({ errors: err.errors }, "Shop validation failed");
             res.status(400).json({ message: err.errors.join(", ") });
             return;
         }
+        log.error(err, "Unexpected error during validation");
         throw err;
     }
 
@@ -43,13 +45,16 @@ const postShopHandler = (db: Pool) => async (req: Request, res: Response) => {
             message: "Shop created successfully",
         };
 
+        log.info({ id: response.id }, "Shop created successfully");
         res.status(200).json(response);
     } catch (err: any) {
         // Foreign key violation — department or municipality does not exist
         if (err.code === "23503") {
+            log.error({ code: err.code, body }, "Foreign key violation: department or municipality not found");
             res.status(400).json({ message: "Department or municipality not found" });
             return;
         }
+        log.error(err, "Unexpected error while creating shop");
         throw err;
     }
 };
