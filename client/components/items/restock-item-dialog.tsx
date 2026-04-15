@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { z } from "zod";
 import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,12 +21,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const restockSchema = z.object({
-  shop: z.string().min(1, "Shop is required"),
-  quantity: z.coerce.number().int().positive("Quantity must be greater than 0"),
-});
-
-type RestockValues = z.infer<typeof restockSchema>;
+interface RestockValues {
+  shop: string;
+  quantity: number;
+}
 
 export function RestockItemDialog({
   sku,
@@ -52,9 +48,9 @@ export function RestockItemDialog({
     reset,
     control,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<RestockValues>({
-    resolver: zodResolver(restockSchema),
+    mode: "onBlur",
     defaultValues: { shop: "", quantity: 0 },
   });
   const selectedShop = useWatch({ control, name: "shop" });
@@ -78,7 +74,19 @@ export function RestockItemDialog({
     },
   });
 
-  const onSubmit = handleSubmit((values) => restockMutation.mutateAsync(values));
+  const onSubmit = handleSubmit(async (values) => {
+    // Manual validation
+    if (!values.shop) {
+      toast.error("Shop is required");
+      return;
+    }
+    if (!values.quantity || values.quantity <= 0) {
+      toast.error("Quantity must be greater than 0");
+      return;
+    }
+
+    return restockMutation.mutateAsync(values);
+  });
 
   return (
     <Dialog
@@ -121,13 +129,11 @@ export function RestockItemDialog({
                 ))}
               </SelectContent>
             </Select>
-            {errors.shop ? <p className="text-sm text-destructive">{errors.shop.message}</p> : null}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="restock-quantity">Quantity</Label>
-            <Input id="restock-quantity" type="number" min="1" step="1" {...register("quantity")} />
-            {errors.quantity ? <p className="text-sm text-destructive">{errors.quantity.message}</p> : null}
+            <Input id="restock-quantity" type="number" min="1" step="1" {...register("quantity", { valueAsNumber: true })} />
           </div>
 
           <DialogFooter>

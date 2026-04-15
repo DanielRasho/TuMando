@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { z } from "zod";
 import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,13 +28,11 @@ const CATEGORIES = [
   { id: 3, name: "Componentes" },
 ] as const;
 
-const createItemSchema = z.object({
-  name: z.string().min(1, "Name is required").max(50, "Name must be 50 characters or less"),
-  cost: z.coerce.number().positive("Cost must be greater than 0"),
-  category: z.string().min(1, "Category is required"),
-});
-
-type CreateItemValues = z.infer<typeof createItemSchema>;
+interface CreateItemValues {
+  name: string;
+  cost: number;
+  category: string;
+}
 
 export function CreateItemDialog() {
   const [open, setOpen] = useState(false);
@@ -48,9 +44,9 @@ export function CreateItemDialog() {
     reset,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<CreateItemValues>({
-    resolver: zodResolver(createItemSchema),
+    mode: "onBlur",
     defaultValues: { name: "", cost: 0, category: "" },
   });
 
@@ -72,7 +68,27 @@ export function CreateItemDialog() {
     },
   });
 
-  const onSubmit = handleSubmit((values) => createMutation.mutateAsync(values));
+  const onSubmit = handleSubmit(async (values) => {
+    // Manual validation
+    if (!values.name || values.name.length === 0) {
+      toast.error("Name is required");
+      return;
+    }
+    if (values.name.length > 50) {
+      toast.error("Name must be 50 characters or less");
+      return;
+    }
+    if (!values.cost || values.cost <= 0) {
+      toast.error("Cost must be greater than 0");
+      return;
+    }
+    if (!values.category) {
+      toast.error("Category is required");
+      return;
+    }
+
+    return createMutation.mutateAsync(values);
+  });
 
   return (
     <Dialog
@@ -98,7 +114,6 @@ export function CreateItemDialog() {
           <div className="space-y-2">
             <Label htmlFor="item-name">Name</Label>
             <Input id="item-name" placeholder="Laptop, Monitor..." {...register("name")} />
-            {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -109,9 +124,8 @@ export function CreateItemDialog() {
               step="0.01"
               min="0"
               placeholder="0.00"
-              {...register("cost")}
+              {...register("cost", { valueAsNumber: true })}
             />
-            {errors.cost ? <p className="text-sm text-destructive">{errors.cost.message}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -131,7 +145,6 @@ export function CreateItemDialog() {
                 ))}
               </SelectContent>
             </Select>
-            {errors.category ? <p className="text-sm text-destructive">{errors.category.message}</p> : null}
           </div>
 
           <DialogFooter>

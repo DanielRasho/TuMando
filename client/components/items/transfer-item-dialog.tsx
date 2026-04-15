@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { z } from "zod";
 import { ArrowRightLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,18 +21,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const transferSchema = z
-  .object({
-    from_shop: z.string().min(1, "Source shop is required"),
-    to_shop: z.string().min(1, "Destination shop is required"),
-    quantity: z.coerce.number().int().positive("Quantity must be greater than 0"),
-  })
-  .refine((values) => values.from_shop !== values.to_shop, {
-    message: "Source and destination shops must be different",
-    path: ["to_shop"],
-  });
-
-type TransferValues = z.infer<typeof transferSchema>;
+interface TransferValues {
+  from_shop: string;
+  to_shop: string;
+  quantity: number;
+}
 
 export function TransferItemDialog({
   sku,
@@ -58,9 +49,9 @@ export function TransferItemDialog({
     reset,
     control,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<TransferValues>({
-    resolver: zodResolver(transferSchema),
+    mode: "onBlur",
     defaultValues: { from_shop: "", to_shop: "", quantity: 0 },
   });
 
@@ -87,7 +78,27 @@ export function TransferItemDialog({
     },
   });
 
-  const onSubmit = handleSubmit((values) => transferMutation.mutateAsync(values));
+  const onSubmit = handleSubmit(async (values) => {
+    // Manual validation
+    if (!values.from_shop) {
+      toast.error("Source shop is required");
+      return;
+    }
+    if (!values.to_shop) {
+      toast.error("Destination shop is required");
+      return;
+    }
+    if (values.from_shop === values.to_shop) {
+      toast.error("Source and destination shops must be different");
+      return;
+    }
+    if (!values.quantity || values.quantity <= 0) {
+      toast.error("Quantity must be greater than 0");
+      return;
+    }
+
+    return transferMutation.mutateAsync(values);
+  });
 
   return (
     <Dialog
@@ -130,7 +141,6 @@ export function TransferItemDialog({
                 ))}
               </SelectContent>
             </Select>
-            {errors.from_shop ? <p className="text-sm text-destructive">{errors.from_shop.message}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -151,13 +161,11 @@ export function TransferItemDialog({
                 ))}
               </SelectContent>
             </Select>
-            {errors.to_shop ? <p className="text-sm text-destructive">{errors.to_shop.message}</p> : null}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="transfer-quantity">Quantity</Label>
-            <Input id="transfer-quantity" type="number" min="1" step="1" {...register("quantity")} />
-            {errors.quantity ? <p className="text-sm text-destructive">{errors.quantity.message}</p> : null}
+            <Input id="transfer-quantity" type="number" min="1" step="1" {...register("quantity", { valueAsNumber: true })} />
           </div>
 
           <DialogFooter>
