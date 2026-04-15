@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const apiBaseUrl = process.env.API_URL ?? "http://localhost:3004";
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3004";
 
 const departmentSchema = z.object({
   id: z.number(),

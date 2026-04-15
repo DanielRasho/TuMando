@@ -22,6 +22,10 @@ RUN pnpm install --frozen-lockfile
 # Copy source
 COPY . .
 
+# Bake the API URL into the bundle at build time
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Build Next
 RUN pnpm build
 

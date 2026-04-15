@@ -6,7 +6,7 @@ A little app to control your inventary and payments as a bussiness, with a funny
 
 ## 📦 Dependencies
 
-Before you get down to rock some code, you need these programs installed on your PC:
+Before you get down to rock some code, you need these programs installed on your PC if want to develop locally:
 
 - Docker
 - Node
@@ -15,7 +15,7 @@ Before you get down to rock some code, you need these programs installed on your
 - Moon (task manager)
 - Postgres 17
 
-If you don't want to install them all, this project supports [**Nix**](https://nixos.org/) for installing everything for you.
+If you don't want to install them all, this project supports [**Nix**](https://nixos.org/) for installing everything for you... or just follow the next section :v
 
 ## 🚀 Getting Started
 
@@ -36,7 +36,7 @@ The following services will be started:
 
 ## 🏗️ Infrastructure
 
-My favorite part! A proper app should be dpeloy but I didn't want to run each service on the server via SSH and call it a day :/
+My favorite part! A proper app should be deployed but I didn't want to run each service on the server via SSH and call it a day :/
 
 **I wanted a fully fleshed-out production environment with continuous integration** that an administrator would actually like to work with. So here it is:
 
@@ -57,7 +57,7 @@ Each box is a containerized app and arrows represent direct network traffic conn
 
 ## 🔄 CI/CD
 
-You may want to check for actual runs [here]() or [here]()
+The project also has automatic deployment, you may want to check for actual runs [here](https://github.com/DanielRasho/TuMando/actions/runs/24468002297) or [here](https://github.com/DanielRasho/TuMando/actions/runs/24478954639)
 
 ### 🧪 Tests
 

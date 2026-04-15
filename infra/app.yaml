@@ -18,6 +18,8 @@ services:
       - vpc
     environment: 
       PORT: "3003"
+      API_URL: "http://tumando-server:8080"
+      NEXT_PUBLIC_API_URL: "http://tumando-server:8080"
     labels:
       - "wud.watch=true"
       - "wud.display.name=TuMando Client"
