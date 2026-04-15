@@ -7,7 +7,7 @@ export type DatabaseConfig = {
 };
 
 export type CorsConfig = {
-    AllowedOrigins: string;
+    AllowedOrigins: string[];
     AllowedContentTypes: string;
     AllowedMethods: string;
     AllowedHeaders: string;
@@ -39,7 +39,7 @@ export function loadDatabaseConfig(): DatabaseConfig {
 
 export function loadCorsConfig(): CorsConfig {
     return {
-        AllowedOrigins: mustGetEnv("ALLOWED_ORIGINS"),
+        AllowedOrigins: mustGetEnvAsStringArray("ALLOWED_ORIGINS"),
         AllowedContentTypes: mustGetEnv("ALLOWED_CONTENT_TYPES"),
         AllowedMethods: mustGetEnv("ALLOWED_METHODS"),
         AllowedHeaders: mustGetEnv("ALLOWED_HEADERS"),

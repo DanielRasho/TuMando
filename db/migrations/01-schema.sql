@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS item (
 CREATE TABLE IF NOT EXISTS inventory (
     sku INT REFERENCES item(sku) NOT NULL,
     shop INT REFERENCES shop(id) NOT NULL,
-    quantity INT NOT NULL DEFAULT 0
+    quantity INT NOT NULL DEFAULT 0,
+    UNIQUE (sku, shop)
 );
 
 CREATE TABLE IF NOT EXISTS inventory_action (
@@ -49,7 +50,8 @@ CREATE TABLE  IF NOT EXISTS bill (
     id uuid PRIMARY KEY NOT NULL,
     nit VARCHAR(10) NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    cost int not null
+    cost int not null,
+    shop INT REFERENCES shop(id) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS inventory_history (

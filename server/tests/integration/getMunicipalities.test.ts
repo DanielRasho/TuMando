@@ -34,10 +34,7 @@ describe("GET List municipalities", () => {
 
             expect(response.status).toBe(200);
             expect(response.data.length).toBeGreaterThan(0);
-            for (const m of response.data) {
-                expect(m.department).toBeTypeOf("number");
-                expect(m.department).toBeGreaterThan(0);
-            }
+            await validateResponse(response.data, RESPONSE_SCHEMA);
         } catch (err) {
             handleUnexpectedAxiosError(err);
         }
