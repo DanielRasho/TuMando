@@ -1,41 +1,40 @@
 import "dotenv/config";
 import log from "./utils/logger";
 import express from "express";
-import { loadAppConfig, type AppConfig } from "./config";
+import { loadAppConfig, loadDatabaseConfig, type AppConfig } from "./config";
 
-// import { connectDB } from "./database/client";
+import { newPGClient } from "./db/client";
 
-// import { loggingMiddleware } from "./api/middlewares/logging";
-// import { corsMiddleware } from "./api/middlewares/cors";
+import { loggingMiddleware } from "./middleware/logging";
+import { corsMiddleware } from "./middleware/cors";
 
-log.info("Logger set up");
+import postShopHandler from "./handlers/shop/postShop";
 
-log.info("Load environment variables...");
-const config: AppConfig = loadAppConfig();
+(async () => {
+    log.info("Logger set up");
 
-log.info("Setting DB Client...");
-// connectDB();
+    log.info("Load environment variables...");
+    const config: AppConfig = loadAppConfig();
 
-const app = express();
+    log.info("Setting DB Client...");
+    const DBClientConfig = loadDatabaseConfig();
+    const client = await newPGClient(DBClientConfig.DBUri);
 
-log.info("Setting up middlewares...");
-// app.use([express.json(), corsMiddleware, loggingMiddleware]);
+    const app = express();
 
-log.info("Setting up routes...");
+    log.info("Setting up middlewares...");
+    app.use([express.json(), corsMiddleware, loggingMiddleware]);
 
-app.get("/favicon.ico", (_req, res) => {
-    res.status(204);
-}); // Ignore favicon request from browsers.
-app.get("/health", (_req, res) => {
-    res.status(200);
-    res.json({ msg: "API is up!" });
-});
-// app.get(
-//     "/missions/statistics",
-//     validateAccessTokenMiddleware,
-//     getMissionsStatistics,
-// );
+    log.info("Setting up routes...");
 
-app.listen(config.APIPort, () => {
-    log.info(`Server running on port ${config.APIPort}`);
-});
+    app.get("/health", (_req, res) => {
+        res.status(200);
+        res.json({ msg: "API is up!" });
+    });
+
+    app.post("/shop", postShopHandler(client));
+
+    app.listen(config.APIPort, () => {
+        log.info(`Server running on port ${config.APIPort}`);
+    });
+})();

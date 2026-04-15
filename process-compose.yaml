@@ -10,7 +10,7 @@ processes:
 
   server:
     command: moon run server:dev
-    ready_log_line: Running on http
+    ready_log_line: Server running on port
     depends_on:
       db:
         condition: process_log_ready
@@ -21,4 +21,4 @@ processes:
       server:
         condition: process_log_ready
     availability:
-      exit_on_end: true
+      exit_on_end: false

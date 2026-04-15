@@ -1,0 +1,77 @@
+@startuml
+
+entity department #LightSteelBlue {
+    * id : INT
+    * name : VARCHAR(50)
+}
+
+entity municipality #LightSteelBlue {
+    * id : SERIAL
+    * name : VARCHAR(50)
+    department : INT
+}
+
+entity shop #LightYellow {
+    * id : SERIAL
+    * name : VARCHAR(50)
+    * department : INT
+    * municipality : INT
+    * date : TIMESTAMP
+}
+
+entity item__category #LightSteelBlue {
+    * id : SERIAL
+    * name : VARCHAR(50)
+}
+
+entity item #LightYellow {
+    * sku : SERIAL
+    * name : VARCHAR(50)
+    * cost : FLOAT
+    * category : INT
+    * date : TIMESTAMP
+}
+
+entity inventory {
+    * sku : INT
+    * shop : INT
+    * quantity : INT
+}
+
+entity inventory_action #LightSteelBlue {
+    * id : SERIAL
+    name : VARCHAR(35)
+}
+
+entity inventory_history #LightYellow {
+    * sku : INT
+    * quantity : INT
+    * unitary_cost : INT
+    action : INT
+    * date : TIMESTAMP
+    bill : UUID
+}
+
+entity bill #LightYellow {
+    * id : UUID
+    * nit : VARCHAR(10)
+    * date : TIMESTAMP
+    * cost : INT
+}
+
+' Relationships
+department --> municipality
+department --> shop
+municipality --> shop
+
+item__category --> item
+
+item --> inventory
+shop --> inventory
+
+item --> inventory_history
+inventory_action --> inventory_history
+
+inventory_history --> bill
+
+@enduml

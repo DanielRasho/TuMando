@@ -1,22 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    "outDir": "build",
-    "rootDir": "src",
-
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-
-    "forceConsistentCasingInFileNames": true,
-
-    "resolveJsonModule": true,
-
-    "types": ["node"]
+    "allowJs": true,
+    "types": ["vitest/globals", "node"],
+    "noEmit": true,
+    "rootDir": "."
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "tests", "dist"]
+  // "include": ["cmd/**/*.js", "cmd/**/*.ts", "test/**/*.ts", "test/**/*.js"]
 }
