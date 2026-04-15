@@ -419,9 +419,14 @@ INSERT INTO municipality (name, department) VALUES
     ('Zacapa', 6);
 
 INSERT INTO shop (id, name, department, municipality) VALUES
-    (1, 'Central', 1, 1),
-    (2, 'Norte', 1, 1),
-    (3, 'Occidente', 1, 1);
+    (1, 'Central', 1, 79),
+    (2, 'Norte', 1, 78),
+    (3, 'Occidente', 1, 77);
+
+INSERT INTO item (name, cost, category) VALUES
+    ('Nothing Phone 3', 300, 1),
+    ('Macbook New', 500, 2),
+    ('Bluetooth Mouse', 45, 3);
 
 -- Resync sequences after explicit-ID inserts so subsequent INSERTs don't collide
 SELECT setval(pg_get_serial_sequence('shop', 'id'),            MAX(id)) FROM shop;
