@@ -32,8 +32,8 @@ type NavigationItem = {
 const navigationItems: NavigationItem[] = [
   { href: "/shops", label: "Shops", eyebrow: "Branch network", icon: Store },
   { href: "/inventory", label: "Inventory", eyebrow: "Stock control", icon: Boxes },
-  { href: "/reports", label: "Reports", eyebrow: "Insights", icon: BarChart3 },
   { href: "/bills", label: "Bills", eyebrow: "Billing desk", icon: ReceiptText },
+  { href: "/reports", label: "Reports", eyebrow: "Insights", icon: BarChart3 },
 ];
 
 export function DashboardShell({ children }: { children: ReactNode }) {

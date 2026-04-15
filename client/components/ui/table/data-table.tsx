@@ -24,12 +24,14 @@ export function DataTable<TData>({
   isLoading = false,
   error = null,
   emptyMessage = "No results found.",
+  onRowClick,
 }: {
   columns: ColumnDef<TData>[];
   data: TData[];
   isLoading?: boolean;
   error?: Error | null;
   emptyMessage?: string;
+  onRowClick?: (row: TData) => void;
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({
@@ -109,7 +111,11 @@ export function DataTable<TData>({
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className={onRowClick ? "cursor-pointer" : undefined}
+                  onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "TuMando",
-  description: "Internal operations dashboard for NovaTech Store billing and branch workflows.",
+  description: "A tini-tiny billing app",
 };
 
 export default function RootLayout({
