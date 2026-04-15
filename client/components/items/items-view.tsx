@@ -2,24 +2,16 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
-import { useDeferredValue, useMemo, useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { useDeferredValue, useState } from "react";
+import { Search } from "lucide-react";
 
 import { DataTable } from "@/components/ui/table/data-table";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getInventory, Item } from "@/lib/api";
+import { CreateItemDialog } from "@/components/items/create-item-dialog";
+import { ItemDetailsDialog } from "@/components/items/item-details-dialog";
 
 const itemsColumns: ColumnDef<Item>[] = [
   {
@@ -47,6 +39,8 @@ const itemsColumns: ColumnDef<Item>[] = [
 
 export function ItemsView() {
   const [search, setSearch] = useState("");
+  const [selectedSku, setSelectedSku] = useState<number | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const deferredSearch = useDeferredValue(search.trim());
 
@@ -86,26 +80,7 @@ export function ItemsView() {
                 </div>
               </div>
 
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="w-full xl:w-auto">
-                    <Plus className="size-4" />
-                    Add item
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add item to catalog</DialogTitle>
-                    <DialogDescription>
-                      This modal is ready for the item creation form. We can wire the fields and zod validation next.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="rounded-xl border border-dashed border-border bg-muted/40 p-6 text-sm text-muted-foreground">
-                    Empty modal placeholder.
-                  </div>
-                  <DialogFooter showCloseButton />
-                </DialogContent>
-              </Dialog>
+              <CreateItemDialog />
             </div>
 
             <DataTable
@@ -114,10 +89,25 @@ export function ItemsView() {
               isLoading={itemsQuery.isLoading}
               error={itemsQuery.error}
               emptyMessage="No items match the search criteria."
+              onRowClick={(item) => {
+                setSelectedSku(item.sku);
+                setDetailsOpen(true);
+              }}
             />
           </CardContent>
         </Card>
       </div>
+
+      <ItemDetailsDialog
+        sku={selectedSku}
+        open={detailsOpen}
+        onOpenChange={(open) => {
+          setDetailsOpen(open);
+          if (!open) {
+            setSelectedSku(null);
+          }
+        }}
+      />
     </div>
   );
 }
