@@ -51,3 +51,5 @@ jobs:
           tags: |
             ${{ matrix.service.image }}:latest
             ${{ matrix.service.image }}:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}

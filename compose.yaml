@@ -3,6 +3,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: "http://localhost:3004"
     image: tumando-client:latest
     container_name: tumando-client
     restart: unless-stopped
