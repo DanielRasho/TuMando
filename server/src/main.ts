@@ -9,6 +9,9 @@ import { loggingMiddleware } from "./middleware/logging";
 import { corsMiddleware } from "./middleware/cors";
 
 import postShopHandler from "./handlers/shop/postShop";
+import getShopsHandler from "./handlers/shop/getShops";
+import getDepartmentsHandler from "./handlers/catalogs/getDepartments";
+import getMunicipalitiesHandler from "./handlers/catalogs/getMunicipalities";
 
 (async () => {
     log.info("Logger set up");
@@ -33,6 +36,9 @@ import postShopHandler from "./handlers/shop/postShop";
     });
 
     app.post("/shop", postShopHandler(client));
+    app.get("/shops", getShopsHandler(client));
+    app.get("/departments", getDepartmentsHandler(client));
+    app.get("/municipalities", getMunicipalitiesHandler(client));
 
     app.listen(config.APIPort, () => {
         log.info(`Server running on port ${config.APIPort}`);
