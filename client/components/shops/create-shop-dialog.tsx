@@ -2,9 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { z } from "zod";
 import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,13 +21,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getDepartments, getMunicipalities, postShop } from "@/lib/api";
 
-const createShopSchema = z.object({
-  name: z.string().min(1, "Name is required").max(50, "Name must be 50 characters or less"),
-  department: z.string().min(1, "Department is required"),
-  municipality: z.string().min(1, "Municipality is required"),
-});
-
-type CreateShopValues = z.infer<typeof createShopSchema>;
+interface CreateShopValues {
+  name: string;
+  department: string;
+  municipality: string;
+}
 
 export function CreateShopDialog() {
   const [open, setOpen] = useState(false);
@@ -41,9 +37,9 @@ export function CreateShopDialog() {
     reset,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<CreateShopValues>({
-    resolver: zodResolver(createShopSchema),
+    mode: "onBlur",
     defaultValues: { name: "", department: "", municipality: "" },
   });
 
@@ -80,7 +76,27 @@ export function CreateShopDialog() {
     },
   });
 
-  const onSubmit = handleSubmit((values) => createMutation.mutateAsync(values));
+  const onSubmit = handleSubmit(async (values) => {
+    // Manual validation
+    if (!values.name || values.name.length === 0) {
+      toast.error("Name is required");
+      return;
+    }
+    if (values.name.length > 50) {
+      toast.error("Name must be 50 characters or less");
+      return;
+    }
+    if (!values.department) {
+      toast.error("Department is required");
+      return;
+    }
+    if (!values.municipality) {
+      toast.error("Municipality is required");
+      return;
+    }
+
+    return createMutation.mutateAsync(values);
+  });
 
   return (
     <Dialog
@@ -106,7 +122,6 @@ export function CreateShopDialog() {
           <div className="space-y-2">
             <Label htmlFor="shop-name">Name</Label>
             <Input id="shop-name" placeholder="Centro, Norte..." {...register("name")} />
-            {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -127,7 +142,6 @@ export function CreateShopDialog() {
                 ))}
               </SelectContent>
             </Select>
-            {errors.department ? <p className="text-sm text-destructive">{errors.department.message}</p> : null}
           </div>
 
           <div className="space-y-2">
@@ -148,7 +162,6 @@ export function CreateShopDialog() {
                 ))}
               </SelectContent>
             </Select>
-            {errors.municipality ? <p className="text-sm text-destructive">{errors.municipality.message}</p> : null}
           </div>
 
           <DialogFooter>

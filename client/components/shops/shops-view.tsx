@@ -3,24 +3,15 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
 import { ComponentType, useDeferredValue, useMemo, useState } from "react";
-import { Building2, MapPinned, Plus, Search } from "lucide-react";
+import { Building2, MapPinned, Search } from "lucide-react";
 
 import { DataTable } from "@/components/ui/table/data-table";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Department, getDepartments, getMunicipalities, getShops, Municipality, Shop } from "@/lib/api";
+import { CreateShopDialog } from "@/components/shops/create-shop-dialog";
 
 const shopsColumns = (
   departmentById: Map<number, string>,
@@ -147,26 +138,7 @@ export function ShopsView() {
                 />
               </div>
 
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="w-full xl:w-auto">
-                    <Plus className="size-4" />
-                    Create shop
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Create shop</DialogTitle>
-                    <DialogDescription>
-                      This modal is ready for the shop creation form. We can wire the fields and zod validation next.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="rounded-xl border border-dashed border-border bg-muted/40 p-6 text-sm text-muted-foreground">
-                    Empty modal placeholder.
-                  </div>
-                  <DialogFooter showCloseButton />
-                </DialogContent>
-              </Dialog>
+              <CreateShopDialog />
             </div>
 
             {filtersError ? (
@@ -202,7 +174,6 @@ function FilterSelect<T extends Department | Municipality>({
   id: string;
   label: string;
   placeholder: string;
-  icon: React.ComponentType<{ className?: string }>;
   icon: ComponentType<{ className?: string }>;
   value: string;
   disabled?: boolean;
