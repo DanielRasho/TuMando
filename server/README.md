@@ -32,14 +32,12 @@ HANDLER1    HANDLER2    HANDLER3
 
 ```
 .
-├── db
-│   └── queries.sql     # DB queries (produce)
-├── internal
+├── src
 │   ├── config          # Env pulling cofig data
 │   ├── handlers        # Websocket and HTTP handlers
 │   ├── middlewares     # hadlers middlewares
-│   ├── services        # Core bussines logic
-│   └── storage         # Database interaction code
+│   ├── utils
+│   └── db              # Database interaction code
 ├── tests
 │   ├── helpers.ts      # helper function for tests
 │   ├── integration     # integration tests

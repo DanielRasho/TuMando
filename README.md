@@ -15,7 +15,7 @@ Before you get down to rock some code, you need these programs installed on your
 - Moon (task manager)
 - Postgres 17
 
-If you don't want to install them all, this project supports [**Nix**](https://nixos.org/) for installing everything for you... or just follow the next section :v
+If you don't want to install them all, this project supports [**Nix**](https://nixos.org/) for installing everything for you... or just follow the next section with docker :v
 
 ## 🚀 Getting Started
 
@@ -54,6 +54,7 @@ Each box is a containerized app and arrows represent direct network traffic conn
 | **Uptime Kuma** | A monitoring service that checks each service is running and healthy. Offers a dashboard to view their status. |
 | **Portainer** | Lets you manage all containers running on the host via a web GUI. |
 | **Image Updater (WUD)** | Checks for image updates in the container registry and pulls them automatically. This is the key piece that makes the deployment flow fully automatic. |
+| **Grafana Loki** | A service used to ingest logs and make query them more easily, it lets you make dashboards with your ingested data. |
 
 ## 🔄 CI/CD
 
